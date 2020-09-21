@@ -73,7 +73,7 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _ScanRange: 127098.26
+    - _ScanRange: 146092.67
     - _ScanWidth: 40
     - _Smoothness: 0.24
     - _SmoothnessTextureChannel: 0

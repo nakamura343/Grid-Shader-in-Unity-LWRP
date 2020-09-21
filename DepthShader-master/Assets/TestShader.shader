@@ -4,6 +4,7 @@ Shader "Custom/TestShader"
 {
     Properties{
         [HDR] _LineColor("Line Color", Color) = (1,1,1,1)
+        [HDR] _LineHeadColor("LineHeadColor", Color) = (1,1,1,1)
         _MainColor("MainColor", color) = (0,1,0,1)           //第一种颜色：绿
         _SecondColor("SecondColor", color) = (1,0,0,1) //第二种颜色：红
         _Center("Center", range(-0.51,0.51)) = 0              //中心点y坐标值
@@ -12,6 +13,7 @@ Shader "Custom/TestShader"
 
         _LineWid("LineWid", range(0,0.01)) = 0.01
         _LineNum("LineNum", range(1,100)) = 10
+        _LineInterVal("LineInterVal", range(0.001,0.1)) = 0.001
         _Num("Num", int) = 10
 
 
@@ -31,6 +33,7 @@ Shader "Custom/TestShader"
                 fixed4 _MainColor;
                 fixed4 _SecondColor;
                 fixed4 _LineColor;
+                fixed4 _LineHeadColor;
                 float _Center;
                 float _R;
 
@@ -72,33 +75,37 @@ Shader "Custom/TestShader"
 
                 fixed4 frag(v2f IN) :COLOR
                 {
-                    float Xmin = _ZoneStart - _TimeLast;
+                    float Xmax = _ZoneStart + _TimeLast;
                     float Wid = _ZoneWid;
-                    float Xmax = Xmin + Wid;
+                    float Xmin = Xmax - Wid;
 
                     fixed4 col;
                     int num = 20;
 
                     float div = 1.0 / float(_LineNum * 2);
-                    col = _SecondColor;
+                    col = _LineColor;
                     col.a = 0;
 
-
+                    //扩散最先头的亮线
                     if (IN.x > Xmin - _LineWid && IN.x < Xmin) {
-                        col = _LineColor;
+                        col = _SecondColor;
                     }
 
 
                     if (IN.x > Xmin && IN.x < Xmax) {
-                        fixed scanPercent = 1- (IN.x - Xmax) / Wid / 2;
-                        col = lerp((1, 0, 0, 1), col, scanPercent);
+                        fixed scanPercent = (IN.x - Xmin) / Wid / 2;
+                        col = lerp(_SecondColor, _LineColor, scanPercent);
 
                         for (int j = 0; j < _LineNum * 4; j++) {
                             if ((IN.x > -1 + div * j && IN.x < -1 + div * j + _LineWid)
                                 || (IN.z > -1 + div * j && IN.z < -1 + div * j + _LineWid)) {
-                                col = lerp((1, 0, 0, 1), col, scanPercent + 0.3);
+                                col = lerp(_SecondColor, _LineColor, scanPercent + 0.2);
                                 //col = _LineColor;
                             }
+                        }
+
+                        if (IN.x > Xmax - _LineWid && IN.x < Xmax) {
+                            col = _LineHeadColor;
                         }
                     }
 

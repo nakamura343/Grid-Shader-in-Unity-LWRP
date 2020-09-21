@@ -27,7 +27,7 @@ public class ShaderMgr : MonoBehaviour
 
         if(time > 2.5f)
         {
-            time = 0;
+            time = -0.5f;
         }
 
         mat.SetFloat("_TimeLast", time / 100.0f * speed);
