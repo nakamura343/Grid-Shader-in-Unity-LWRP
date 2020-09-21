@@ -84,8 +84,8 @@ Shader "Custom/TestShader"
                     col.a = 0;
 
 
-                    if (IN.x > Xmin - .001 && IN.x < Xmin) {
-                        //col = _LineColor;
+                    if (IN.x > Xmin - _LineWid && IN.x < Xmin) {
+                        col = _LineColor;
                     }
 
 

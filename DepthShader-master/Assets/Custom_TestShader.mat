@@ -27,15 +27,18 @@ Material:
     - _CamFar: 500
     - _Center: -0.305
     - _Glossiness: 0.5
-    - _LineNum: 6.5
-    - _LineWid: 0.0055
+    - _LineNum: 16
+    - _LineWid: 0.0035
     - _Metallic: 0
     - _Num: 29.77
     - _R: 0.051
     - _ScanDepth: 0
     - _ScanWidth: 1
+    - _TimeLast: 0
+    - _ZoneStart: 0.38
+    - _ZoneWid: 0.226
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _LineColor: {r: 0.1537837, g: 10.867401, b: 9.745556, a: 0.8352941}
+    - _LineColor: {r: 0.49350488, g: 2.6183174, b: 2.5762706, a: 1}
     - _MainColor: {r: 0, g: 1, b: 0, a: 1}
     - _SecondColor: {r: 1, g: 0, b: 0, a: 1}
