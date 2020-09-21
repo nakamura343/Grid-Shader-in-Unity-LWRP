@@ -17,6 +17,7 @@ Shader "Custom/TestShader"
 
         _ZoneStart("ZoneStart", range(-0.5,1.5)) = 0.01
         _ZoneWid("ZoneWid", range(0,0.5)) = 0.01
+        _TimeLast("TimeLast", float) = 0
 
     }
         SubShader{
@@ -38,6 +39,7 @@ Shader "Custom/TestShader"
                 int _Num;
                 float _ZoneStart;
                 float _ZoneWid;
+                float _TimeLast;
 
 
 
@@ -70,7 +72,7 @@ Shader "Custom/TestShader"
 
                 fixed4 frag(v2f IN) :COLOR
                 {
-                    float Xmin = _ZoneStart;
+                    float Xmin = _ZoneStart - _TimeLast;
                     float Wid = _ZoneWid;
                     float Xmax = Xmin + Wid;
 
@@ -82,8 +84,8 @@ Shader "Custom/TestShader"
                     col.a = 0;
 
 
-                    if (IN.x > _ZoneStart - .001 && IN.x < _ZoneStart) {
-                        col = _LineColor;
+                    if (IN.x > Xmin - .001 && IN.x < Xmin) {
+                        //col = _LineColor;
                     }
 
 
