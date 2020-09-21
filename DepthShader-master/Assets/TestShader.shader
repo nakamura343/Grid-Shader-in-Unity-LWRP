@@ -10,10 +10,13 @@ Shader "Custom/TestShader"
         _R("R", range(0,1)) = 0.2                                         //产生渐变的范围值
 
 
-        _LineWid("LineWid", range(0,0.1)) = 0.1
+        _LineWid("LineWid", range(0,0.01)) = 0.01
         _LineNum("LineNum", range(1,100)) = 10
         _Num("Num", int) = 10
 
+
+        _ZoneStart("ZoneStart", range(-0.5,1.5)) = 0.01
+        _ZoneWid("ZoneWid", range(0,0.5)) = 0.01
 
     }
         SubShader{
@@ -33,7 +36,8 @@ Shader "Custom/TestShader"
                 float _LineWid;
                 int _LineNum;
                 int _Num;
-
+                float _ZoneStart;
+                float _ZoneWid;
 
 
 
@@ -61,22 +65,41 @@ Shader "Custom/TestShader"
                     o.z = v.vertex.z;
                     return o;
                 }
+
+
+
                 fixed4 frag(v2f IN) :COLOR
                 {
+                    float Xmin = _ZoneStart;
+                    float Wid = _ZoneWid;
+                    float Xmax = Xmin + Wid;
+
                     fixed4 col;
                     int num = 20;
 
                     float div = 1.0 / float(_LineNum * 2);
                     col = _SecondColor;
                     col.a = 0;
-                    for (int j = 0; j < _LineNum*4; j++) {
-                        if ((IN.x > -1 + div * j && IN.x < -1 + div * j + _LineWid)
-                            || (IN.z > -1 + div * j && IN.z < -1 + div * j + _LineWid)) {
-                            col = _LineColor;
-                        }
-                        else {
+
+
+                    if (IN.x > _ZoneStart - .001 && IN.x < _ZoneStart) {
+                        col = _LineColor;
+                    }
+
+
+                    if (IN.x > Xmin && IN.x < Xmax) {
+                        fixed scanPercent = 1- (IN.x - Xmax) / Wid / 2;
+                        col = lerp((1, 0, 0, 1), col, scanPercent);
+
+                        for (int j = 0; j < _LineNum * 4; j++) {
+                            if ((IN.x > -1 + div * j && IN.x < -1 + div * j + _LineWid)
+                                || (IN.z > -1 + div * j && IN.z < -1 + div * j + _LineWid)) {
+                                col = lerp((1, 0, 0, 1), col, scanPercent + 0.3);
+                                //col = _LineColor;
+                            }
                         }
                     }
+
 
 
                     return col;
