@@ -12,13 +12,12 @@ Shader "Custom/TestShader"
 
 
         _LineWid("LineWid", range(0,0.01)) = 0.01
-        _LineNum("LineNum", range(1,100)) = 10
         _LineInterVal("LineInterVal", range(0.001,0.1)) = 0.001
         _Num("Num", int) = 10
 
 
         _ZoneStart("ZoneStart", range(-0.5,1.5)) = 0.01
-        _ZoneWid("ZoneWid", range(0,0.5)) = 0.01
+        _ZoneWid("ZoneWid", range(0,0.03)) = 0.001
         _TimeLast("TimeLast", float) = 0
 
     }
@@ -38,12 +37,11 @@ Shader "Custom/TestShader"
                 float _R;
 
                 float _LineWid;
-                int _LineNum;
+                float _LineInterVal;
                 int _Num;
                 float _ZoneStart;
                 float _ZoneWid;
                 float _TimeLast;
-
 
 
                 //获取随机噪点值，这里使用的因子是原x+时间长度
@@ -82,7 +80,6 @@ Shader "Custom/TestShader"
                     fixed4 col;
                     int num = 20;
 
-                    float div = 1.0 / float(_LineNum * 2);
                     col = _LineColor;
                     col.a = 0;
 
@@ -96,9 +93,10 @@ Shader "Custom/TestShader"
                         fixed scanPercent = (IN.x - Xmin) / Wid / 2;
                         col = lerp(_SecondColor, _LineColor, scanPercent);
 
-                        for (int j = 0; j < _LineNum * 4; j++) {
-                            if ((IN.x > -1 + div * j && IN.x < -1 + div * j + _LineWid)
-                                || (IN.z > -1 + div * j && IN.z < -1 + div * j + _LineWid)) {
+                        int num = 1.0f / _LineInterVal;
+                        for (int j = 0; j < num; j++) {
+                            if ((IN.x > -0 + _LineInterVal * j && IN.x < -0 + _LineInterVal * j + _LineWid)
+                                || (IN.z > -1 + _LineInterVal * j && IN.z < -1 + _LineInterVal * j + _LineWid)) {
                                 col = lerp(_SecondColor, _LineColor, scanPercent + 0.2);
                                 //col = _LineColor;
                             }
