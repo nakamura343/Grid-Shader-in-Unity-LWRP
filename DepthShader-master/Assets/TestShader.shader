@@ -20,6 +20,8 @@ Shader "Custom/TestShader"
         _ZoneWid("ZoneWid", range(0,0.03)) = 0.001
         _TimeLast("TimeLast", float) = 0
 
+        _LineYColor("LineYColor", color) = (1,1,0,1) //
+        _LineY("LineY", range(-1,1)) = 0.001
     }
         SubShader{
             Tags { "RenderType" = "Transparent" "Queue" = "Transparent" }
@@ -42,6 +44,9 @@ Shader "Custom/TestShader"
                 float _ZoneStart;
                 float _ZoneWid;
                 float _TimeLast;
+
+                float _LineY;
+                fixed4 _LineYColor;
 
 
                 //获取随机噪点值，这里使用的因子是原x+时间长度
@@ -108,6 +113,9 @@ Shader "Custom/TestShader"
                     }
 
 
+                    if (IN.y > _LineY - _LineWid && IN.y < _LineY) {
+                        col = _LineYColor;
+                    }
 
                     return col;
                 }
