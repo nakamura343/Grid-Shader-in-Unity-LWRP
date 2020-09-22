@@ -3,7 +3,7 @@
     Properties{
         [HDR] _LineColor("Line Color", Color) = (1,1,1,1)
         [HDR] _LineHeadColor("LineHeadColor", Color) = (1,1,1,1)  //线头的一条线的颜色
-        _SecondColor("SecondColor", color) = (1,0,0,1) //第二种颜色
+        _TailColor("TailColor", color) = (1,0,0,1) //第二种颜色
 
         _LineWid("LineWid", range(0,0.01)) = 0.0012
         _LineInterValX("LineInterValX", range(0.001,0.1)) = 0.0202
@@ -26,7 +26,7 @@
                 #pragma vertex vert
                 #pragma fragment frag
                 #include "unitycg.cginc"
-                fixed4 _SecondColor;
+                fixed4 _TailColor;
                 fixed4 _LineColor;
                 fixed4 _LineHeadColor;
 
@@ -67,7 +67,10 @@
                     return o;
                 }
 
-
+                //
+                fixed CalculatePercent(float now, float to, float total) {
+                    return abs(now - to) / total / 2;
+                }
 
                 fixed4 frag(v2f IN) :COLOR
                 {
@@ -83,10 +86,10 @@
                     //在扫描区域内
                     if (IN.x > Xmin && IN.x < Xmax) {
                         //lerp的百分比
-                        fixed scanPercent = (IN.x - Xmin) / Wid / 2;
+                        fixed scanPercent = CalculatePercent(IN.x, Xmin, Wid);
 
                         //区域颜色lerp
-                        col = lerp(_SecondColor, _LineColor, scanPercent);
+                        col = lerp(_TailColor, _LineColor, scanPercent);
 
                         //计算一共需要画多少条横线，多少条竖线
                         int numx = 1.0f / _LineInterValX;
@@ -94,12 +97,12 @@
                         //画方格线
                         for (int j = 0; j < numx; j++) {
                             if ((IN.x > -0 + _LineInterValX * j && IN.x < -0 + _LineInterValX * j + _LineWid)) {
-                                col = lerp(_SecondColor, _LineColor, scanPercent + 0.2);
+                                col = lerp(_TailColor, _LineColor, scanPercent + 0.2);
                             }
                         }
                         for (int j = 0; j < numz; j++) {
                             if ((IN.z > -1 + _LineInterValZ * j && IN.z < -1 + _LineInterValZ * j + _LineWid)) {
-                                col = lerp(_SecondColor, _LineColor, scanPercent + 0.2);
+                                col = lerp(_TailColor, _LineColor, scanPercent + 0.2);
                             }
                         }
 

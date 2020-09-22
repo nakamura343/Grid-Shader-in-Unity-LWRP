@@ -1,29 +1,22 @@
-﻿
-Shader "Custom/ScanShader"
+﻿Shader "Custom/ScanShader"
 {
     Properties{
         [HDR] _LineColor("Line Color", Color) = (1,1,1,1)
         [HDR] _LineHeadColor("LineHeadColor", Color) = (1,1,1,1)  //线头的一条线的颜色
-        _MainColor("MainColor", color) = (0,1,0,1)           //第一种颜色：绿
-        _SecondColor("SecondColor", color) = (1,0,0,1) //第二种颜色：红
-        _Center("Center", range(-0.51,0.51)) = 0              //中心点y坐标值
-        _R("R", range(0,1)) = 0.2                                         //产生渐变的范围值
+        _TailColor("TailColor", color) = (1,0,0,1) //第二种颜色
 
-
-        _LineWid("LineWid", range(0,0.01)) = 0.01
-        _LineInterVal("LineInterVal", range(0.001,0.1)) = 0.001
-        _Num("Num", int) = 10
-
+        _LineWid("LineWid", range(0,0.01)) = 0.0012
+        _LineInterValX("LineInterValX", range(0.001,0.1)) = 0.0202
+        _LineInterValZ("LineInterValZ", range(0.001,0.1)) = 0.0391
 
         _ZoneStart("ZoneStart", range(-1,1.5)) = 0.01
-        _ZoneWid("ZoneWid", range(0,0.03)) = 0.001
-        _TimeLast("TimeLast", float) = 0
+        _ZoneWid("ZoneWid", range(0,.8)) = 0.185
+        _TimePassed("TimePassed", float) = 0
 
         _LineYColor("LineYColor", color) = (1,1,0,1) //
         _LineY("LineY", range(-1,1)) = 0.001
-
-
         _OffsetY("OffsetY", range(-15,15)) = 0
+
     }
         SubShader{
             Tags { "RenderType" = "Transparent" "Queue" = "Transparent" }
@@ -33,23 +26,19 @@ Shader "Custom/ScanShader"
                 #pragma vertex vert
                 #pragma fragment frag
                 #include "unitycg.cginc"
-                fixed4 _MainColor;
-                fixed4 _SecondColor;
+                fixed4 _TailColor;
                 fixed4 _LineColor;
                 fixed4 _LineHeadColor;
-                float _Center;
-                float _R;
 
                 float _LineWid;
-                float _LineInterVal;
-                int _Num;
+                float _LineInterValX;
+                float _LineInterValZ;
                 float _ZoneStart;
                 float _ZoneWid;
-                float _TimeLast;
+                float _TimePassed;
 
                 float _LineY;
                 fixed4 _LineYColor;
-
                 float _OffsetY;
 
 
@@ -71,60 +60,66 @@ Shader "Custom/ScanShader"
                 {
                     v2f o;
                     o.pos = UnityObjectToClipPos(v.vertex);
-                    o.pos.y -= _OffsetY;
-                    //o.pos = UnityObjectToClipPos(v.vertex);
-                    //o.pos = UnityObjectToClipPos(float3(v.vertex.x, sin(10 * (v.vertex.x - 2) + 10 * _Time.y), v.vertex.z));
+                    //o.pos = UnityObjectToClipPos(float3(v.vertex.x, v.vertex.y, v.vertex.z));
                     o.x = v.vertex.x;
-                    o.y = v.vertex.y;
+                    o.y = v.vertex.y - _OffsetY;
                     o.z = v.vertex.z;
                     return o;
                 }
 
-
+                //
+                fixed CalculatePercent(float now, float to, float total) {
+                    return abs(now - to) / total / 2;
+                }
 
                 fixed4 frag(v2f IN) :COLOR
                 {
-                    float Xmax = _ZoneStart + _TimeLast;
-                    float Wid = _ZoneWid;
-                    float Xmin = Xmax - Wid;
+                    //扫描区前端，开始
+                    float Xmax = _ZoneStart + _TimePassed;
+                //扫描区宽度
+                float Wid = _ZoneWid;
+                //扫描区后端，结束
+                float Xmin = Xmax - Wid;
+                //返回颜色初始化
+                fixed4 col = (0, 0, 0, 0);
 
-                    fixed4 col;
-                    int num = 20;
+                //在扫描区域内
+                if (IN.x > Xmin && IN.x < Xmax) {
+                    //lerp的百分比
+                    fixed scanPercent = CalculatePercent(IN.x, Xmin, Wid);
 
-                    col = _LineColor;
-                    col.a = 0;
+                    //区域颜色lerp
+                    col = lerp(_TailColor, _LineColor, scanPercent);
 
-                    //扩散之后的区域的整体颜色
-                    if (IN.x > Xmin - _LineWid && IN.x < Xmin) {
-                        col = _SecondColor;
-                    }
-
-
-                    if (IN.x > Xmin && IN.x < Xmax) {
-                        fixed scanPercent = (IN.x - Xmin) / Wid / 2;
-                        col = lerp(_SecondColor, _LineColor, scanPercent);
-
-                        int num = 1.0f / _LineInterVal;
-                        for (int j = 0; j < num; j++) {
-                            if ((IN.x > -0 + _LineInterVal * j && IN.x < -0 + _LineInterVal * j + _LineWid)
-                                || (IN.z > -1 + _LineInterVal * j && IN.z < -1 + _LineInterVal * j + _LineWid)) {
-                                col = lerp(_SecondColor, _LineColor, scanPercent + 0.2);
-                            }
-                        }
-
-                        if (IN.x > Xmax - _LineWid && IN.x < Xmax) {
-                            col = _LineHeadColor;
+                    //计算一共需要画多少条横线，多少条竖线
+                    int numx = 1.0f / _LineInterValX;
+                    int numz = 1.0f / _LineInterValZ;
+                    //画方格线
+                    for (int j = 0; j < numx; j++) {
+                        if ((IN.x > -0 + _LineInterValX * j && IN.x < -0 + _LineInterValX * j + _LineWid)) {
+                            col = lerp(_TailColor, _LineColor, scanPercent + 0.2);
                         }
                     }
-
-
-                    if (IN.y > _LineY - _LineWid && IN.y < _LineY) {
-                        col = _LineYColor;
+                    for (int j = 0; j < numz; j++) {
+                        if ((IN.z > -1 + _LineInterValZ * j && IN.z < -1 + _LineInterValZ * j + _LineWid)) {
+                            col = lerp(_TailColor, _LineColor, scanPercent + 0.2);
+                        }
                     }
 
-                    return col;
+                    //线头的一条线
+                    if (IN.x > Xmax - _LineWid && IN.x < Xmax) {
+                        col = _LineHeadColor;
+                    }
                 }
-                ENDCG
+
+                //画一条等高线
+                if (IN.y > _LineY - _LineWid && IN.y < _LineY) {
+                    col = _LineYColor;
+                }
+
+                return col;
             }
+            ENDCG
+        }
     }
 }

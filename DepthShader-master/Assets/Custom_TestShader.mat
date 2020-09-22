@@ -40,13 +40,14 @@ Material:
     - _ScanDepth: 0
     - _ScanWidth: 1
     - _TimeLast: 0.31784585
-    - _TimePassed: 0.28077352
-    - _ZoneStart: 0.47
+    - _TimePassed: 0
+    - _ZoneStart: 0.72
     - _ZoneWid: 0.185
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _LineColor: {r: 0.3529412, g: 1.827451, b: 1.8117647, a: 1}
-    - _LineHeadColor: {r: 3.482202, g: 0, b: 0.15021265, a: 1}
+    - _LineColor: {r: 0.35400876, g: 1.6497307, b: 1.827451, a: 1}
+    - _LineHeadColor: {r: 3.482202, g: 0, b: 0.10781092, a: 1}
     - _LineYColor: {r: 1, g: 1, b: 0, a: 1}
     - _MainColor: {r: 1, g: 0.028497314, b: 0, a: 1}
-    - _SecondColor: {r: 0.09803921, g: 0.86334884, b: 1, a: 0}
+    - _SecondColor: {r: 1, g: 0.09803921, b: 0.12080078, a: 0}
+    - _TailColor: {r: 0.069686726, g: 0.4348829, b: 0.5471698, a: 0}
