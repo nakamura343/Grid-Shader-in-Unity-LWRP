@@ -30,7 +30,7 @@ public class ShaderMgr : MonoBehaviour
             time = -2f;
         }
 
-        mat.SetFloat("_TimeLast", time / 100.0f * speed);
+        mat.SetFloat("_TimePassed", time / 100.0f * speed);
     }
 
 }
