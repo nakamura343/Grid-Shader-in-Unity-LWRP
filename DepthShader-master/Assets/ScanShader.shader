@@ -76,49 +76,49 @@
                 {
                     //扫描区前端，开始
                     float Xmax = _ZoneStart + _TimePassed;
-                //扫描区宽度
-                float Wid = _ZoneWid;
-                //扫描区后端，结束
-                float Xmin = Xmax - Wid;
-                //返回颜色初始化
-                fixed4 col = (0, 0, 0, 0);
+                    //扫描区宽度
+                    float Wid = _ZoneWid;
+                    //扫描区后端，结束
+                    float Xmin = Xmax - Wid;
+                    //返回颜色初始化
+                    fixed4 col = (0, 0, 0, 0);
 
-                //在扫描区域内
-                if (IN.x > Xmin && IN.x < Xmax) {
-                    //lerp的百分比
-                    fixed scanPercent = CalculatePercent(IN.x, Xmin, Wid);
+                    //在扫描区域内
+                    if (IN.x > Xmin && IN.x < Xmax) {
+                        //lerp的百分比
+                        fixed scanPercent = CalculatePercent(IN.x, Xmin, Wid);
 
-                    //区域颜色lerp
-                    col = lerp(_TailColor, _LineColor, scanPercent);
+                        //区域颜色lerp
+                        col = lerp(_TailColor, _LineColor, scanPercent);
 
-                    //计算一共需要画多少条横线，多少条竖线
-                    int numx = 1.0f / _LineInterValX;
-                    int numz = 1.0f / _LineInterValZ;
-                    //画方格线
-                    for (int j = 0; j < numx; j++) {
-                        if ((IN.x > -0 + _LineInterValX * j && IN.x < -0 + _LineInterValX * j + _LineWid)) {
-                            col = lerp(_TailColor, _LineColor, scanPercent + 0.2);
+                        //计算一共需要画多少条横线，多少条竖线
+                        int numx = 1.0f / _LineInterValX;
+                        int numz = 1.0f / _LineInterValZ;
+                        //画方格线
+                        for (int j = 0; j < numx; j++) {
+                            if ((IN.x > -0 + _LineInterValX * j && IN.x < -0 + _LineInterValX * j + _LineWid)) {
+                                col = lerp(_TailColor, _LineColor, scanPercent + 0.2);
+                            }
+                        }
+                        for (int j = 0; j < numz; j++) {
+                            if ((IN.z > -1 + _LineInterValZ * j && IN.z < -1 + _LineInterValZ * j + _LineWid)) {
+                                col = lerp(_TailColor, _LineColor, scanPercent + 0.2);
+                            }
+                        }
+
+                        //线头的一条线
+                        if (IN.x > Xmax - _LineWid && IN.x < Xmax) {
+                            col = _LineHeadColor;
                         }
                     }
-                    for (int j = 0; j < numz; j++) {
-                        if ((IN.z > -1 + _LineInterValZ * j && IN.z < -1 + _LineInterValZ * j + _LineWid)) {
-                            col = lerp(_TailColor, _LineColor, scanPercent + 0.2);
-                        }
+
+                    //画一条等高线
+                    if (IN.y > _LineY - _LineWid && IN.y < _LineY) {
+                        col = _LineYColor;
                     }
 
-                    //线头的一条线
-                    if (IN.x > Xmax - _LineWid && IN.x < Xmax) {
-                        col = _LineHeadColor;
-                    }
+                    return col;
                 }
-
-                //画一条等高线
-                if (IN.y > _LineY - _LineWid && IN.y < _LineY) {
-                    col = _LineYColor;
-                }
-
-                return col;
-            }
             ENDCG
         }
     }
