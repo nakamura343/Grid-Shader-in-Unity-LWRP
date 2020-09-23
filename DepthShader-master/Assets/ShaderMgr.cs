@@ -49,7 +49,7 @@ public class ShaderMgr : MonoBehaviour
         {
             if (ScanTimer > 2.0f)
             {
-                ScanTimer = -2f;
+                ScanTimer = -3f;
             }
         }
 

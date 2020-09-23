@@ -5,12 +5,12 @@
         [HDR] _LineHeadColor("LineHeadColor", Color) = (1,1,1,1)  //线头的一条线的颜色
         _TailColor("TailColor", color) = (1,0,0,1) //第二种颜色
 
-        _LineWid("LineWid", range(0,0.01)) = 0.0012
-        _LineInterValX("LineInterValX", range(0.001,0.1)) = 0.0202
-        _LineInterValZ("LineInterValZ", range(0.001,0.1)) = 0.0391
+        _LineWid("LineWid", range(0,0.01)) = 0.0009
+        _LineInterValX("LineInterValX", range(0.001,0.1)) = 0.034
+        _LineInterValZ("LineInterValZ", range(0.001,0.1)) = 0.036
 
-        _ZoneStart("ZoneStart", range(-1,1.5)) = 0.01
-        _ZoneWid("ZoneWid", range(0,.8)) = 0.185
+        _ZoneStart("ZoneStart", range(-1,1.5)) = 0.01  
+        _ZoneWid("ZoneWid", range(0,.8)) = 0.185       //0.42
         _TimePassed("TimePassed", float) = 0
 
         _LineYColor("LineYColor", color) = (1,1,0,1) //
@@ -23,8 +23,8 @@
         _PointZ("PointZ", range(-2,2)) = 0
 
 
-        _RadiusOut("RadiusOut", range(-2,2)) = 0
-        _RadiusWid("RadiusWid", range(0,20)) = 0
+        _RadiusOut("RadiusOut", range(-2,2)) = 0 //1
+        _RadiusWid("RadiusWid", range(0,5)) = 0  //1.52
 
     }
     SubShader{
@@ -112,15 +112,19 @@
                 //在扫描区域内
                 float3 pos = IN.worldPos;
                 float3 centerPoint = _ScanCenter;
+
+
+                //pos = float3(IN.x, 0, IN.z);
+                //centerPoint = float3(_PointX, _PointY, _PointZ);
                 fixed dis = distance(pos, centerPoint);
 
                 if (dis > Xmin && dis < Xmax) {
 
                     //lerp的百分比
-                    fixed scanPercent = frac(CalculatePercentCricle(pos, centerPoint, Wid));
+                    fixed scanPercent = (CalculatePercent(dis, Xmin, Wid)) + 0.22;
 
                     //区域颜色lerp
-                    col = lerp(_TailColor, _LineColor, .5);
+                    col = lerp(_TailColor, _LineColor, scanPercent);
 
                     //计算一共需要画多少条横线，多少条竖线
                     int numx = 1.0f / _LineInterValX;
@@ -138,7 +142,7 @@
                     }
 
                     //线头的一条线
-                    if (dis > Xmax - _LineWid && dis < Xmax) {
+                    if (dis > Xmax - _LineWid * 100 && dis < Xmax) {
                         col = _LineHeadColor;
                     }
                 }
