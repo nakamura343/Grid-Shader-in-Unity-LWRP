@@ -17,12 +17,6 @@
         _LineY("LineY", range(-1,1)) = 0.001
         _OffsetY("OffsetY", range(-15,15)) = 0
 
-
-        _PointX("PointX", range(-2,2)) = 0
-        _PointY("PointY", range(-2,2)) = 0
-        _PointZ("PointZ", range(-2,2)) = 0
-
-
         _RadiusOut("RadiusOut", range(-2,2)) = 0 //1
         _RadiusWid("RadiusWid", range(0,5)) = 0  //1.52
 
@@ -51,22 +45,11 @@
             float _OffsetY;
 
 
-            float _PointX;
-            float _PointY;
-            float _PointZ;
             float _RadiusOut;
             float _RadiusWid;
 
             float3 _ScanCenter;
             float _IsLineScan;
-
-            //获取随机噪点值，这里使用的因子是原x+时间长度
-            //float noise = random(o.pos.x + _Time.y * 0.4);
-            //噪点/随机数发生器
-            float random(float n) {
-                return frac(sin(dot(n, float2(12.9898, 78.233))) * 43758.5453123);
-            }
-
 
             struct v2f {
                 float4 pos:POSITION;
@@ -91,12 +74,6 @@
             fixed CalculatePercent(float now, float to, float total) {
                 return abs(now - to) / total / 2;
             }
-            //扩散扫描
-            fixed CalculatePercentCricle(float3 now, float3 to, float total) {
-                return distance(now, to) / total / 2;
-            }
-
-
 
             fixed4 frag_Circle(v2f IN) :COLOR
             {
@@ -113,9 +90,6 @@
                 float3 pos = IN.worldPos;
                 float3 centerPoint = _ScanCenter;
 
-
-                //pos = float3(IN.x, 0, IN.z);
-                //centerPoint = float3(_PointX, _PointY, _PointZ);
                 fixed dis = distance(pos, centerPoint);
 
                 if (dis > Xmin && dis < Xmax) {
