@@ -15,42 +15,54 @@ public class ShaderMgr : MonoBehaviour
 
     public Material mat = null;
     public float speed = 50;
+    Camera cam;
+    float ScanTimer = 0;
+    private Vector3 ScanPoint = Vector3.zero;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
     }
 
-    float time = 0;
 
     // Update is called once per frame
     void Update()
     {
-        time += Time.deltaTime;
+        ScanTimer += Time.deltaTime;
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            time = 0;
+            ScanTimer = 0;
         }
 
         if(st == ShaderType.Line)
         {
-            if (time > 2.0f)
+            if (ScanTimer > 2.0f)
             {
-                time = -2f;
+                ScanTimer = -2f;
             }
         }
 
         if (st == ShaderType.Circle)
         { 
-            if (time > 2.0f)
+            if (ScanTimer > 2.0f)
             {
-                time = 0f;
+                //ScanTimer = 0f;
             }
         }
 
+        mat.SetFloat("_TimePassed", ScanTimer / 100.0f * speed);
 
-        mat.SetFloat("_TimePassed", time / 100.0f * speed);
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Input.GetMouseButton(0) && Physics.Raycast(ray, out hit))
+        {
+            ScanTimer = 0;
+            ScanPoint = hit.point;
+        }
+        mat.SetVector("_ScanCenter", ScanPoint);
+
+
     }
 
 }

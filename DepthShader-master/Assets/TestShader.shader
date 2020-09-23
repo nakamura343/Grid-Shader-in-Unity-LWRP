@@ -24,7 +24,7 @@
 
 
         _RadiusOut("RadiusOut", range(-2,2)) = 0
-        _RadiusWid("RadiusWid", range(0,2)) = 0
+        _RadiusWid("RadiusWid", range(0,20)) = 0
 
     }
     SubShader{
@@ -57,6 +57,7 @@
             float _RadiusOut;
             float _RadiusWid;
 
+            float3 _ScanCenter;
 
             //获取随机噪点值，这里使用的因子是原x+时间长度
             //float noise = random(o.pos.x + _Time.y * 0.4);
@@ -68,9 +69,10 @@
 
             struct v2f {
                 float4 pos:POSITION;
-                float y : TEXCOORD0;
-                float x : TEXCOORD1;
+                float x : TEXCOORD0;
+                float y : TEXCOORD1;
                 float z : TEXCOORD2;
+                float3 worldPos : TEXCOORD3;
             };
             v2f vert(appdata_base v)
             {
@@ -80,6 +82,7 @@
                 o.x = v.vertex.x;
                 o.y = v.vertex.y - _OffsetY;
                 o.z = v.vertex.z;
+                o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
                 return o;
             }
 
@@ -106,19 +109,14 @@
                 fixed4 col = (0, 0, 0, 0);
 
                 //在扫描区域内
-                //if (IN.x > Xmin && IN.x < Xmax) {
-
-                float3 pos = float3(IN.x, 0, IN.z);
-                float3 centerPoint = float3(_PointX, _PointY, _PointZ);
+                float3 pos = IN.worldPos;
+                float3 centerPoint = _ScanCenter;
                 fixed dis = distance(pos, centerPoint);
 
                 if (dis > Xmin && dis < Xmax) {
 
-
                     //lerp的百分比
-                    //fixed scanPercent = CalculatePercent(IN.x, Xmin, Wid);
                     fixed scanPercent = frac(CalculatePercentCricle(pos, centerPoint, Wid));
-                    
 
                     //区域颜色lerp
                     col = lerp(_TailColor, _LineColor, .5);
