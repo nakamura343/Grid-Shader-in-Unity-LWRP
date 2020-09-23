@@ -58,6 +58,7 @@
             float _RadiusWid;
 
             float3 _ScanCenter;
+            float _IsLineScan;
 
             //获取随机噪点值，这里使用的因子是原x+时间长度
             //float noise = random(o.pos.x + _Time.y * 0.4);
@@ -203,8 +204,14 @@
 
             fixed4 frag(v2f IN) :COLOR
             {
+                if (_IsLineScan == 1) {
+                    return frag_Line(IN);
+                }
+                else {
+                    return frag_Circle(IN);
+                }
                 //return frag_Line(IN);
-                return frag_Circle(IN);
+                //return frag_Circle(IN);
             }
         ENDCG
         }

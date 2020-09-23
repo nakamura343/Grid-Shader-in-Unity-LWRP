@@ -31,7 +31,7 @@ Material:
     - _LineInterValX: 0.034
     - _LineInterValZ: 0.036
     - _LineNum: 15
-    - _LineWid: 0.001
+    - _LineWid: 0.0004
     - _LineY: -0.15
     - _Metallic: 0
     - _Num: 29.77
@@ -41,13 +41,13 @@ Material:
     - _PointZ: -0.62
     - _R: 0
     - _RadiusOut: 0.15
-    - _RadiusWid: 0.11
+    - _RadiusWid: 4.3
     - _ScanDepth: 0
     - _ScanWidth: 1
     - _TimeLast: 0.31784585
-    - _TimePassed: 0.36112946
+    - _TimePassed: 26.162115
     - _ZoneStart: 0
-    - _ZoneWid: 0.11
+    - _ZoneWid: 0.22
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Coordinate: {r: 0.6950836, g: 0.37358558, b: 0, a: 0}

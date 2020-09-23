@@ -8284,12 +8284,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 80790450}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 202.98746, y: 38.2, z: 146.74171}
-  m_LocalScale: {x: 62.00283, y: 0.0069899363, z: 21.225634}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_Father: {fileID: 1047189197}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &170076733
 GameObject:
@@ -8637,14 +8637,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 456e88018be4ad049b14e715e6df33a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ScanMat: {fileID: 2100000, guid: 18c79b3462a63c449ae4fae3e7bc398b, type: 2}
   ScanSpeed: 100
-  scanTimer: 1837.3138
+  scanTimer: 1841.1448
 --- !u!1 &756136290
 GameObject:
   m_ObjectHideFlags: 0
@@ -8827,6 +8827,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b993f45d45539074792e7ad24016239f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  st: 1
   mat: {fileID: 2100000, guid: f3dec4a04d95b8d4992560d0ac3d62c7, type: 2}
   speed: 50
 --- !u!1 &1003276353
@@ -9116,7 +9117,7 @@ MeshCollider:
   m_GameObject: {fileID: 1047189192}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Convex: 0
   m_CookingOptions: 30
@@ -17254,7 +17255,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 202.98746, y: 39.420177, z: 146.74171}
   m_LocalScale: {x: 62.00283, y: 0.0069899363, z: 21.225634}
-  m_Children: []
+  m_Children:
+  - {fileID: 80790455}
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -17270,8 +17272,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b993f45d45539074792e7ad24016239f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  st: 1
   mat: {fileID: 2100000, guid: f3dec4a04d95b8d4992560d0ac3d62c7, type: 2}
-  speed: 40
+  speed: 3000
 --- !u!1 &1426812007
 GameObject:
   m_ObjectHideFlags: 0
@@ -18353,5 +18356,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b993f45d45539074792e7ad24016239f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  st: 1
   mat: {fileID: 2100000, guid: f3dec4a04d95b8d4992560d0ac3d62c7, type: 2}
   speed: 50

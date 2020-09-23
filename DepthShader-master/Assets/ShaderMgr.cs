@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-enum ShaderType
+public enum ShaderType
 {
     Line,
     Circle,
@@ -11,7 +11,7 @@ enum ShaderType
 
 public class ShaderMgr : MonoBehaviour
 {
-    ShaderType st = ShaderType.Circle;
+    public ShaderType st = ShaderType.Circle;
 
     public Material mat = null;
     public float speed = 50;
@@ -22,11 +22,21 @@ public class ShaderMgr : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        if (st == ShaderType.Line)
+        {
+            mat.SetFloat("_IsLineScan", 1);
+            speed = 40;
+        }
+        else
+        {
+            mat.SetFloat("_IsLineScan", 0);
+            speed = 3000;
+        }
     }
 
 
-    // Update is called once per frame
-    void Update()
+        // Update is called once per frame
+        void Update()
     {
         ScanTimer += Time.deltaTime;
 
