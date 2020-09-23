@@ -2,8 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+enum ShaderType
+{
+    Line,
+    Circle,
+}
+
 public class ShaderMgr : MonoBehaviour
 {
+    ShaderType st = ShaderType.Circle;
 
     public Material mat = null;
     public float speed = 50;
@@ -25,10 +33,22 @@ public class ShaderMgr : MonoBehaviour
             time = 0;
         }
 
-        if(time > 2.0f)
+        if(st == ShaderType.Line)
         {
-            time = -2f;
+            if (time > 2.0f)
+            {
+                time = -2f;
+            }
         }
+
+        if (st == ShaderType.Circle)
+        { 
+            if (time > 2.0f)
+            {
+                time = 0f;
+            }
+        }
+
 
         mat.SetFloat("_TimePassed", time / 100.0f * speed);
     }

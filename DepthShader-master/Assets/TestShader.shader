@@ -54,6 +54,8 @@
             float _PointX;
             float _PointY;
             float _PointZ;
+            float _RadiusOut;
+            float _RadiusWid;
 
 
             //获取随机噪点值，这里使用的因子是原x+时间长度
@@ -95,9 +97,9 @@
             fixed4 frag_Circle(v2f IN) :COLOR
             {
                 //扫描区前端，开始
-                float Xmax = _ZoneStart + _TimePassed;
+                float Xmax = _RadiusOut + _TimePassed;
                 //扫描区宽度
-                float Wid = _ZoneWid;
+                float Wid = _RadiusWid;
                 //扫描区后端，结束
                 float Xmin = Xmax - Wid;
                 //返回颜色初始化
@@ -106,19 +108,20 @@
                 //在扫描区域内
                 //if (IN.x > Xmin && IN.x < Xmax) {
 
-                float3 pos = float3(IN.x, IN.y, IN.z);
+                float3 pos = float3(IN.x, 0, IN.z);
                 float3 centerPoint = float3(_PointX, _PointY, _PointZ);
+                fixed dis = distance(pos, centerPoint);
 
-                if (distance(pos, centerPoint) > Xmin && IN.x < Xmax) {
+                if (dis > Xmin && dis < Xmax) {
 
 
                     //lerp的百分比
                     //fixed scanPercent = CalculatePercent(IN.x, Xmin, Wid);
-                    fixed scanPercent = CalculatePercentCricle(IN.x, Xmin, Wid);
+                    fixed scanPercent = frac(CalculatePercentCricle(pos, centerPoint, Wid));
                     
 
                     //区域颜色lerp
-                    col = lerp(_TailColor, _LineColor, scanPercent);
+                    col = lerp(_TailColor, _LineColor, .5);
 
                     //计算一共需要画多少条横线，多少条竖线
                     int numx = 1.0f / _LineInterValX;
@@ -136,7 +139,7 @@
                     }
 
                     //线头的一条线
-                    if (IN.x > Xmax - _LineWid && IN.x < Xmax) {
+                    if (dis > Xmax - _LineWid && dis < Xmax) {
                         col = _LineHeadColor;
                     }
                 }
